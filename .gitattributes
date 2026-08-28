@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.m4a binary
+*.mp3 binary
+*.png binary
+*.wav binary
+*.component binary
+*.vst3 binary
+*.sh text eol=lf
+*.scl text eol=lf

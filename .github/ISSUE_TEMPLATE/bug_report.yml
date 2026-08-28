@@ -1,0 +1,39 @@
+name: Bug report
+description: Report a reproducible RMF problem
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Please do not post security-sensitive details here; use SECURITY.md."
+  - type: input
+    id: version
+    attributes:
+      label: RMF version and format
+      placeholder: "1.0.0, VST3"
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Host, macOS, architecture, sample rate, and buffer size
+      placeholder: "Ableton Live 12, macOS 15, Apple silicon, 48 kHz, 64 samples"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Include the preset/tuning and smallest repeatable sequence.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Optional logs, screenshots, or short dry audio

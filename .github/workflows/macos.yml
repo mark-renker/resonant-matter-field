@@ -1,0 +1,33 @@
+name: macOS build and tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Check out RMF
+        uses: actions/checkout@v4
+
+      - name: Check out JUCE 8.0.2
+        uses: actions/checkout@v4
+        with:
+          repository: juce-framework/JUCE
+          ref: 8.0.2
+          path: vendor/JUCE
+          submodules: recursive
+
+      - name: Configure
+        run: cmake -S . -B build -G "Unix Makefiles" -DJUCE_ROOT="$PWD/vendor/JUCE" -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build -j 4
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
