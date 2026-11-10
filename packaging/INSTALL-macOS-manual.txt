@@ -1,0 +1,13 @@
+Resonant Matter Field - manual macOS install (if you prefer not to use the .pkg)
+
+1. Copy "Resonant Matter Field.component" to ~/Library/Audio/Plug-Ins/Components/
+2. Copy "Resonant Matter Field.vst3" to ~/Library/Audio/Plug-Ins/VST3/
+3. Optionally copy "Resonant Matter Field.app" (standalone) to /Applications/
+4. Because the bundles were downloaded (not installed by a .pkg), macOS quarantines them. Clear that once:
+      xattr -dr com.apple.quarantine ~/Library/Audio/Plug-Ins/Components/"Resonant Matter Field.component" \
+                                     ~/Library/Audio/Plug-Ins/VST3/"Resonant Matter Field.vst3" \
+                                     /Applications/"Resonant Matter Field.app"
+5. Rescan plug-ins in your DAW. The instrument appears under "Resonant Matter Lab".
+
+The Tunings folder holds the example Scala files (19-EDO, five-limit JI, 13-EDT Bohlen-Pierce); load them with the
+plug-in's tuning picker or by drag-and-drop onto the interface.

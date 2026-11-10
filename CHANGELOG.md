@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.1 — 2026-11-09
+
+- Prebuilt installers: tagged releases now ship a macOS universal (arm64 + x86_64) `.pkg` installer with
+  selectable AU / VST3 / standalone components, a raw-bundles zip for manual installs, and a CI-built Windows
+  x64 VST3/standalone zip (`.github/workflows/release.yml`, `packaging/`).
+- CMake: macOS builds default to universal binaries; Objective-C languages are only enabled on Apple so the
+  project configures on Windows.
+- README: "Install (no build needed)" section replaces the old download notes.
+- No DSP or behaviour changes.
+
 ## 1.0.0 — 2026-08-27
 
 - Initial public release of Resonant Matter Field synthesis.

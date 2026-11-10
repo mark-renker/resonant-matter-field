@@ -1,0 +1,72 @@
+# Tag v* -> macOS universal .pkg installer (+ raw bundles zip) and Windows zip, attached to a GitHub Release.
+name: release
+on:
+  push:
+    tags: [ 'v*' ]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  macos:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out JUCE 8.0.2
+        uses: actions/checkout@v4
+        with:
+          repository: juce-framework/JUCE
+          ref: 8.0.2
+          path: vendor/JUCE
+          submodules: recursive
+      - name: Build (universal arm64 + x86_64)
+        run: |
+          cmake -S . -B build-universal -G "Unix Makefiles" -DJUCE_ROOT="$PWD/vendor/JUCE" -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          cmake --build build-universal -j 4
+      - name: Test
+        run: ctest --test-dir build-universal --output-on-failure
+      - name: Package installer
+        run: packaging/make_installer.sh build-universal
+      - uses: actions/upload-artifact@v4
+        with: { name: macos, path: dist/* }
+  windows:
+    runs-on: windows-2022
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out JUCE 8.0.2
+        uses: actions/checkout@v4
+        with:
+          repository: juce-framework/JUCE
+          ref: 8.0.2
+          path: vendor/JUCE
+          submodules: recursive
+      - run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DJUCE_ROOT="${{ github.workspace }}/vendor/JUCE"
+      - run: cmake --build build --config Release --parallel --target ResonantMatterField_VST3 ResonantMatterField_Standalone rmf_tests
+      - shell: bash
+        run: |
+          ./build/Release/rmf_tests.exe Tunings
+          VERSION=$(sed -n 's/^project(ResonantMatterField VERSION \([0-9.]*\).*/\1/p' CMakeLists.txt)
+          OUT="Resonant Matter Field $VERSION (Windows)"; mkdir -p "$OUT" dist
+          cp -R "build/ResonantMatterField_artefacts/Release/VST3/Resonant Matter Field.vst3" "$OUT/"
+          cp "build/ResonantMatterField_artefacts/Release/Standalone/Resonant Matter Field.exe" "$OUT/"
+          cp -R Tunings "$OUT/Tunings"
+          cp packaging/INSTALL-Windows.txt "$OUT/INSTALL.txt"
+          7z a "dist/ResonantMatterField-$VERSION-Windows-x64.zip" "$OUT"
+      - uses: actions/upload-artifact@v4
+        with: { name: windows, path: dist/* }
+  publish:
+    if: always() && needs.macos.result == 'success' && startsWith(github.ref, 'refs/tags/v')
+    needs: [ macos, windows ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { path: dist }
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/**/*
+          body: |
+            ## Install
+            **macOS** (12+, Apple Silicon + Intel): download `ResonantMatterField-*-macOS.pkg`, open it (right-click > Open if Gatekeeper objects: the installer is not notarized), tick the formats you want (AU, VST3, standalone app). Done; rescan plug-ins in your DAW.
+            **Windows** (x64, CI-built, untested): download `ResonantMatterField-*-Windows-x64.zip`, unzip, copy the `.vst3` folder to `C:\Program Files\Common Files\VST3\`.
+            The instrument appears under **Resonant Matter Lab > Resonant Matter Field**. The `-macOS-bundles.zip` holds the raw bundles for manual installs.
+          generate_release_notes: true

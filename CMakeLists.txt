@@ -1,6 +1,14 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(ResonantMatterField VERSION 1.0.0 LANGUAGES C CXX OBJC OBJCXX)
+# Universal (Apple Silicon + Intel) by default on macOS; override with -DCMAKE_OSX_ARCHITECTURES=arm64.
+if(APPLE AND NOT CMAKE_OSX_ARCHITECTURES)
+    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "macOS architectures" FORCE)
+endif()
+
+project(ResonantMatterField VERSION 1.0.1 LANGUAGES C CXX)
+if(APPLE)
+    enable_language(OBJC OBJCXX)
+endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

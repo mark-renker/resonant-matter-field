@@ -1,0 +1,11 @@
+Resonant Matter Field - Windows install
+
+1. Copy the "Resonant Matter Field.vst3" folder to   C:\Program Files\Common Files\VST3\
+2. Rescan plug-ins in your DAW. The instrument appears under "Resonant Matter Lab".
+3. "Resonant Matter Field.exe" is the standalone app; it runs from anywhere. If SmartScreen warns about an
+   unrecognized app, click More info > Run anyway (the build is not code-signed).
+
+The Tunings folder holds the example Scala files (19-EDO, five-limit JI, 13-EDT Bohlen-Pierce); load them with the
+plug-in's tuning picker or by drag-and-drop onto the interface.
+
+The Windows build is produced by CI only and has not been tested by the author; please report problems on GitHub.

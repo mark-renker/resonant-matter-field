@@ -8,39 +8,23 @@ Resonant Matter Field (RMF) sits between granular synthesis and physical modelin
 
 The result is a playable instrument whose stereo image emerges from contact location, mode shapes, body propagation, and pickup geometry rather than post-panning.
 
-## Download
+## Install (no build needed)
 
-The easiest way to use RMF is the prebuilt Apple-silicon package on the [latest GitHub Release](https://github.com/mark-renker/resonant-matter-field/releases/latest). It contains:
+Grab the latest files from the **[Releases page](../../releases/latest)**:
 
-- arm64 AU and VST3 instruments
-- 24 factory sounds
-- Scala tunings
-- WAV, M4A, and MP3 demonstrations
-- complete source and verification scripts
+* **macOS** (12 or later, Apple Silicon and Intel): download `ResonantMatterField-<version>-macOS.pkg` and open it.
+  If Gatekeeper objects (the installer is not notarized), right-click the file and choose *Open*. Tick the formats
+  you want (AU, VST3, standalone app); they go to `/Library/Audio/Plug-Ins` and `/Applications`. Rescan plug-ins in
+  your DAW. Prefer not to run an installer? `ResonantMatterField-<version>-macOS-bundles.zip` has the raw bundles,
+  the example Scala tunings and a manual-install note.
+* **Windows** (x64): download `ResonantMatterField-<version>-Windows-x64.zip`, unzip, copy
+  `Resonant Matter Field.vst3` to `C:\Program Files\Common Files\VST3\`. The Windows build is produced by CI only
+  and is untested by the author; please report problems in the issue tracker.
 
-The supplied v1.0 binaries are ad-hoc signed for local use. They are **not** Developer ID-notarized retail binaries.
-
-### Install on macOS
-
-From the downloaded release, run:
-
-```sh
-./scripts/install_macos.sh
-```
-
-Or copy the bundles manually:
-
-```text
-Binaries/Resonant Matter Field.vst3
-  → ~/Library/Audio/Plug-Ins/VST3/
-
-Binaries/Resonant Matter Field.component
-  → ~/Library/Audio/Plug-Ins/Components/
-```
-
-On Ableton Live's next normal launch, look under **Plug-ins → VST3 → Resonant Matter Lab → Resonant Matter Field**. The AU appears under **Audio Units** when AU support is enabled. If necessary, use Live's plug-in rescan once after reopening it.
-
-To uninstall, quit audio hosts and remove only those two named bundles.
+The instrument shows up under **Resonant Matter Lab › Resonant Matter Field** (Ableton Live: *Plug-ins → VST3* or
+*Audio Units*; Logic: *AU Instruments*). Every tagged release is built by `.github/workflows/release.yml`;
+`packaging/make_installer.sh build-universal` makes the same `.pkg` locally. The binaries are ad-hoc signed, not
+Developer ID-notarized. To uninstall, quit audio hosts and remove the bundles named above.
 
 ## What makes RMF different
 
@@ -171,6 +155,9 @@ cmake --build build -j 4
 ctest --test-dir build --output-on-failure
 ```
 
+macOS builds are universal (arm64 + x86_64) by default; pass `-DCMAKE_OSX_ARCHITECTURES=arm64` for a faster
+native-only build. `packaging/make_installer.sh build` then wraps the bundles in the `.pkg` installer.
+
 The helper script uses `/Applications/JUCE` by default:
 
 ```sh
@@ -212,7 +199,7 @@ docs/            Interface, sound map, and validation notes
 
 ## Known limitations
 
-- The v1.0 release binaries are arm64 only.
+- The original v1.0.0 release zip was arm64 only; releases from v1.0.1 are universal (arm64 + x86_64).
 - No `.kbm`, MPE per-note expression, seedable random-state recall, or effects rack.
 - Factory body/contact buttons are macros whose underlying parameters save and automate; button highlights are not separate host parameters.
 - The electromechanical circuit is a musically useful bounded approximation, not a bit-exact transducer simulation.

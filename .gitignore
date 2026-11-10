@@ -10,3 +10,4 @@ vendor/JUCE/
 *.xcworkspace
 CMakeUserPresets.json
 cmake-build-*/
+dist/
