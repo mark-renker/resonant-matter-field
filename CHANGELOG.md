@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.1 — 2026-11-09
+## 1.0.2 — 2026-11-09
 
 - Prebuilt installers: tagged releases now ship a macOS universal (arm64 + x86_64) `.pkg` installer with
   selectable AU / VST3 / standalone components, a raw-bundles zip for manual installs, and a CI-built Windows
@@ -8,6 +8,8 @@
 - CMake: macOS builds default to universal binaries; Objective-C languages are only enabled on Apple so the
   project configures on Windows.
 - README: "Install (no build needed)" section replaces the old download notes.
+- CI: GitHub's `macos-14` runner label is retired; both workflows now use `macos-15` (v1.0.1 was tagged before
+  this fix and has no CI-built assets).
 - No DSP or behaviour changes.
 
 ## 1.0.0 — 2026-08-27
